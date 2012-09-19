@@ -7,15 +7,14 @@ require "language_pack/base"
 class LanguagePack::Ruby < LanguagePack::Base
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
-  BUNDLER_VERSION     = "1.2.0.rc"
+  BUNDLER_VERSION     = "1.2.0"
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
   JVM_BASE_URL        = "http://heroku-jvm-langpack-java.s3.amazonaws.com"
   JVM_VERSION         = "openjdk7-latest"
-
-  COUCHBASE_VENDOR_URL = "http://libcouchbase.s3.amazonaws.com/libcouchbase.gz"
-  VBUCKET_VENDOR_URL = "http://libcouchbase.s3.amazonaws.com/libvbucket.gz"
+  
+  GSL_VENDOR_URL = "https://s3.amazonaws.com/gsl_bin/gsl-1.15.tgz"
 
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -56,12 +55,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     setup_language_pack_environment
     setup_profiled
     allow_git do
-      install_libvbucket
-      install_libcouchbase
-      run("cp -R vendor/couchbase /app/vendor/couchbase")
-      #install_couchbase_gem
-      #run("gem install couchbase --with-libcouchbase-dir=bin/libcouchbase")
-
+      install_gsl
       install_language_pack_gems
       build_bundler
       create_database_yml
@@ -343,27 +337,12 @@ ERROR
     FileUtils.rm File.join('bin', File.basename(path)), :force => true
   end
 
-  def install_couchbase_gem
-    topic("Installing couchbase")
-    run("gem install couchbase --pre  --no-ri --no-rdoc --env-shebang -- --with-libcouchbase-dir=/app/vendor/couchbase")
-  end
-
-  def install_libvbucket
-    topic("Installing libvbucket")
-    bin_dir = "vendor/couchbase"
+  def install_gsl
+    puts "Installing gsl"
+    bin_dir = "vendor/gsl"
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
-      run("curl #{VBUCKET_VENDOR_URL} -s -o - | tar xzf -")
-      #run("chmod +x #{path}")
-    end
-  end
-
-  def install_libcouchbase
-    topic("Installing libcouchbase")
-    bin_dir = "vendor/couchbase"
-    FileUtils.mkdir_p bin_dir
-    Dir.chdir(bin_dir) do |dir|
-      run("curl #{COUCHBASE_VENDOR_URL} -s -o - | tar xzf -")
+      run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
     end
   end
 
@@ -419,21 +398,13 @@ ERROR
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
 
-        couchbase_dir = '/app/vendor/couchbase'
-        couchbase_inc = File.expand_path("#{couchbase_dir}/include")
-        couchbase_lib = File.expand_path("#{couchbase_dir}/lib")
-
         # need to setup compile environment for the psych gem
         yaml_include   = File.expand_path("#{libyaml_dir}/include")
         yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
         pwd            = run("pwd").chomp
         # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
         # codon since it uses bundler.
-        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{couchbase_inc}:$CPATH CPPATH=#{yaml_include}:#{couchbase_inc}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{couchbase_inc}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
-
-        run("#{env_vars} bundle config build.couchbase --with-libcouchbase-dir=/app/vendor/couchbase")
-
-
+        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:$CPATH CPPATH=#{yaml_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
         puts "Running: #{bundle_command}"
         bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
 

@@ -1,18 +1,15 @@
-Heroku buildpack: Ruby Couchbase
+Heroku buildpack: Ruby GSL
 ======================
 
-This is a buildpack that enables using the [couchbase gem](https://github.com/couchbase/couchbase-ruby-client) on Heroku Cedar.
+This is a buildpack that enables using the [gsl gem](http://rb-gsl.rubyforge.org/) on Heroku Cedar.
 
-Note this only works with couchbase **1.2.0.dp** so you must have `gem 'couchbase', '1.2.0.dp'` in your **Gemfile**.
-
-    heroku create --stack cedar --buildpack http://github.com/davidjrice/heroku-buildpack-ruby-couchbase.git
+    heroku create --stack cedar --buildpack https://github.com/tomwolfe/heroku-buildpack-gsl-ruby.git
     git push heroku master
     ...
     -----> Heroku receiving push
     -----> Fetching custom buildpack... done
     -----> Ruby/Rails app detected
-    -----> Installing libvbucket
-    -----> Installing libcouchbase
+    -----> Installing gsl
     -----> Installing dependencies using Bundler version 1.1.2
            Running: bundle install --without development:test --path vendor/bundle --binstubs bin/ --deployment
     ....
