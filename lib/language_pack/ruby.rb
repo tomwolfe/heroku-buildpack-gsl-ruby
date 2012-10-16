@@ -339,7 +339,7 @@ ERROR
   end
 
   def install_gsl
-    puts "Installing gsl"
+    topic("Installing gsl")
     bin_dir = "vendor/gsl"
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
