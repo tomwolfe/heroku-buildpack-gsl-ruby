@@ -75,7 +75,7 @@ private
   end
 
   def default_ld_path
-    "/app/vendor/gsl/lib/"
+    "/app/vendor/gsl-1/lib"
   end
 
   # the relative path to the bundler directory of gems
