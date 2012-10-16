@@ -71,11 +71,11 @@ private
   # the base PATH environment variable to be used
   # @return [String] the resulting PATH
   def default_path
-    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
+    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin:/app/vendor/gsl/bin"
   end
 
   def default_ld_path
-    "/app/vendor/gsl-1/lib"
+    "/app/vendor/gsl-1/lib:/app/vendor/gsl/lib"
   end
 
   # the relative path to the bundler directory of gems
