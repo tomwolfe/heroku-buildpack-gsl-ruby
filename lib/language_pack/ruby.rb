@@ -57,6 +57,9 @@ class LanguagePack::Ruby < LanguagePack::Base
     allow_git do
       install_gsl
       run("cp -R vendor/gsl /app/vendor/gsl")
+      # headers for gsl (used for rb-gsl/gsl gem)
+      run("mkdir -p /usr/include/gsl")
+      run("cp -R vendor/gsl/include /usr/include/gsl")
       install_language_pack_gems
       build_bundler
       create_database_yml
