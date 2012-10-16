@@ -57,8 +57,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     setup_profiled
     allow_git do
       install_gsl
-      run("cp -R vendor/gsl /app/vendor/gsl-1")
-      run("cp -R vendor/gsl /app/vendor/gsl")
+      run("mv /app/vendor/gsl /app/vendor/gsl-1")
       install_language_pack_gems
       build_bundler
       create_database_yml
@@ -72,11 +71,11 @@ private
   # the base PATH environment variable to be used
   # @return [String] the resulting PATH
   def default_path
-    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin:/app/vendor/gsl-1/lib:/app/vendor/gsl/bin:/app/vendor/gsl/lib"
+    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
   end
 
   def default_ld_path
-    "/app/vendor/gsl-1/lib:/app/vendor/gsl/lib"
+    "/app/vendor/gsl-1/lib"
   end
 
   # the relative path to the bundler directory of gems
@@ -190,6 +189,7 @@ private
   # sets up the environment variables for the build process
   def setup_language_pack_environment
     setup_ruby_install_env
+    run("mv /app/vendor/gsl /app/vendor/gsl-1")
 
     config_vars = default_config_vars.each do |key, value|
       ENV[key] ||= value
