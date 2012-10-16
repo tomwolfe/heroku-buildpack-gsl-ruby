@@ -35,6 +35,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       "LANG"     => "en_US.UTF-8",
       "PATH"     => default_path,
       "GEM_PATH" => slug_vendor_base,
+      "LD_LIBRARY_PATH" => default_ld_path,
     }
 
     ruby_version_jruby? ? vars.merge("JAVA_OPTS" => default_java_opts, "JRUBY_OPTS" => default_jruby_opts) : vars
@@ -71,6 +72,10 @@ private
   # @return [String] the resulting PATH
   def default_path
     "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
+  end
+
+  def default_ld_path
+    "/app/vendor/gsl/lib/"
   end
 
   # the relative path to the bundler directory of gems
