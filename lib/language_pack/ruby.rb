@@ -71,7 +71,7 @@ private
   # the base PATH environment variable to be used
   # @return [String] the resulting PATH
   def default_path
-    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin:/app/vendor/gsl/bin"
+    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin:/app/vendor/gsl/bin:/app/vendor/gsl/lib:/app/vendor/gsl-1/lib"
   end
 
   def default_ld_path
