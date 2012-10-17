@@ -35,6 +35,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       "LANG"     => "en_US.UTF-8",
       "PATH"     => default_path,
       "GEM_PATH" => slug_vendor_base,
+      "LD_LIBRARY_PATH" => ld_path,
     }
 
     ruby_version_jruby? ? vars.merge("JAVA_OPTS" => default_java_opts, "JRUBY_OPTS" => default_jruby_opts) : vars
@@ -56,7 +57,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     setup_profiled
     allow_git do
       install_gsl
-      run("cp -R vendor/gsl /app/vendor/gsl-1")
+      #run("mv vendor/gsl /app/vendor/gsl-1")
       install_language_pack_gems
       build_bundler
       create_database_yml
@@ -71,6 +72,10 @@ private
   # @return [String] the resulting PATH
   def default_path
     "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
+  end
+
+  def ld_path
+    "/app/vendor/gsl-1/lib"
   end
 
   # the relative path to the bundler directory of gems
@@ -344,6 +349,7 @@ ERROR
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
       run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
+      run("mv #{Dir.pwd} /app/vendor/gsl-1")
     end
   end
 
