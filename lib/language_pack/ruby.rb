@@ -57,7 +57,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     setup_profiled
     allow_git do
       install_gsl
-      #run("mv vendor/gsl /app/vendor/gsl-1")
+      run("mv /app/vendor/gsl /app/vendor/gsl-1")
       install_language_pack_gems
       build_bundler
       create_database_yml
@@ -349,7 +349,6 @@ ERROR
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
       run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
-      run("mv #{Dir.pwd} /app/vendor/gsl-1")
     end
   end
 
