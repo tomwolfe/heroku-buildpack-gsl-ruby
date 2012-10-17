@@ -345,7 +345,7 @@ ERROR
 
   def install_gsl
     topic("Installing gsl")
-    bin_dir = "/app/vendor/gsl-1"
+    bin_dir = "vendor/gsl-1"
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
       run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
