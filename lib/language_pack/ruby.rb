@@ -71,11 +71,11 @@ private
   # the base PATH environment variable to be used
   # @return [String] the resulting PATH
   def default_path
-    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
+    "bin:#{slug_vendor_base}/bin:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl/bin"
   end
 
   def ld_path
-    "/app/vendor/gsl-1/lib"
+    "/app/vendor/gsl/lib"
   end
 
   # the relative path to the bundler directory of gems
@@ -345,13 +345,11 @@ ERROR
 
   def install_gsl
     topic("Installing gsl")
-    bin_dir = "/app/vendor/gsl"
+    bin_dir = "vendor/gsl"
     FileUtils.mkdir_p bin_dir
-    FileUtils.mkdir_p "/app/vendor/gsl-1"
     Dir.chdir(bin_dir) do |dir|
       run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
     end
-    run("mv -f /app/vendor/gsl /app/vendor/gsl-1")
   end
 
   # install libyaml into the LP to be referenced for psych compilation
