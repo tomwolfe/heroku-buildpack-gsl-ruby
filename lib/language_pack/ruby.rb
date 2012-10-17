@@ -350,8 +350,8 @@ ERROR
     FileUtils.mkdir_p "/app/vendor/gsl-1"
     Dir.chdir(bin_dir) do |dir|
       run("curl #{GSL_VENDOR_URL} -s -o - | tar xzf -")
-      run("mv -f /app/vendor/gsl /app/vendor/gsl-1")
     end
+    run("mv -f /app/vendor/gsl /app/vendor/gsl-1")
   end
 
   # install libyaml into the LP to be referenced for psych compilation
