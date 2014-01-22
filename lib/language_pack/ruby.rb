@@ -424,7 +424,6 @@ WARNING
     FileUtils.rm File.join('bin', File.basename(path)), :force => true
   end
 
-<<<<<<< HEAD
   def install_gsl
     topic("Installing gsl")
     bin_dir = "vendor/gsl-1"
