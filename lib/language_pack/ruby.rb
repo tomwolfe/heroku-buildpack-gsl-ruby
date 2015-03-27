@@ -22,6 +22,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   LEGACY_JVM_VERSION   = "openjdk1.7.0_25"
   DEFAULT_RUBY_VERSION = "ruby-2.0.0"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
+  STACK                = "cedar"
 
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -258,7 +259,7 @@ ERROR
         Dir.chdir(build_ruby_path) do
           ruby_vm = "ruby"
           instrument "ruby.fetch_build_ruby" do
-            @fetchers[:buildpack].fetch_untar("cedar/#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
+            @fetchers[:buildpack].fetch_untar("#{STACK}/#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
           end
         end
         error invalid_ruby_version_message unless $?.success?
@@ -268,7 +269,7 @@ ERROR
       Dir.chdir(slug_vendor_ruby) do
         instrument "ruby.fetch_ruby" do
           if ruby_version.rbx?
-            file     = "#{ruby_version.version}.tar.bz2"
+            file     = "#{STACK}/#{ruby_version.version}.tar.bz2"
             sha_file = "#{file}.sha1"
             @fetchers[:rbx].fetch(file)
             @fetchers[:rbx].fetch(sha_file)
@@ -288,7 +289,7 @@ ERROR_MSG
             FileUtils.rm(file)
             FileUtils.rm(sha_file)
           else
-            @fetchers[:buildpack].fetch_untar("#{ruby_version.version}.tgz")
+            @fetchers[:buildpack].fetch_untar("#{STACK}/#{ruby_version.version}.tgz")
           end
         end
       end
