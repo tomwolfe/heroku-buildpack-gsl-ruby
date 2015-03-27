@@ -124,7 +124,7 @@ private
   def default_path
     "bin:#{bundler_binstubs_path}:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
   end
-  
+
   def ld_path
     "/app/vendor/gsl-1/lib"
   end
@@ -258,7 +258,7 @@ ERROR
         Dir.chdir(build_ruby_path) do
           ruby_vm = "ruby"
           instrument "ruby.fetch_build_ruby" do
-            @fetchers[:buildpack].fetch_untar("#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
+            @fetchers[:buildpack].fetch_untar("cedar/#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
           end
         end
         error invalid_ruby_version_message unless $?.success?
@@ -694,7 +694,7 @@ params = CGI.parse(uri.query || "")
       end
     end
   end
-  
+
 	def bundler_cache
     "vendor/bundle"
   end
