@@ -100,7 +100,7 @@ WARNING
           @cache.store default_assets_cache
         else
           log "assets_precompile", :status => "failure"
-          error "Precompiling assets failed."
+          error "Precompiling assets failed (Rails 4)."
         end
       end
     end
@@ -111,4 +111,27 @@ WARNING
       LanguagePack::Helpers::StaleFileCleaner.new(default_assets_cache).clean_over(ASSETS_CACHE_LIMIT)
     end
   end
+
+private
+
+  # setup the database url as an environment variable
+  def setup_database_url_env
+    instrument "rails4.setup_database_url_env" do
+      ENV["DATABASE_URL"] ||= begin
+        # need to use a dummy DATABASE_URL here, so rails can load the environment
+        scheme =
+          if bundler.has_gem?("pg") || bundler.has_gem?("jdbc-postgres")
+            "postgres"
+          elsif bundler.has_gem?("mysql")
+            "mysql"
+          elsif bundler.has_gem?("mysql2")
+            "mysql2"
+          elsif bundler.has_gem?("sqlite3") || bundler.has_gem?("sqlite3-ruby")
+            "sqlite3"
+          end
+        "#{scheme}://user:pass@127.0.0.1/dbname"
+      end
+    end
+  end
+
 end
