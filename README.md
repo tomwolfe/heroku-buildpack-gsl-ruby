@@ -1,6 +1,8 @@
 Heroku buildpack: Ruby GSL
 ======================
 
+DEPRECIATED: Please consider using https://github.com/nolman/heroku-gsl-buildpack instead.
+
 This is a buildpack that enables using the [gsl gem](http://rb-gsl.rubyforge.org/) on Heroku Cedar.
 
     heroku create --stack cedar --buildpack https://github.com/tomwolfe/heroku-buildpack-gsl-ruby.git
