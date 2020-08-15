@@ -106,8 +106,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_profiled
       allow_git do
         install_gsl
-        run("cp -R vendor/gsl-1 /app/vendor/gsl")
-        run("cp -R vendor/gsl-1 /app/vendor/gsl-1")
+        run("cp -R /vendor/gsl-1 /app/vendor/gsl-1")
         install_language_pack_gems
         build_bundler
         create_database_yml
