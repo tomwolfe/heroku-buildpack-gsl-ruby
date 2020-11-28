@@ -13,7 +13,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   NAME                 = "ruby"
   LIBYAML_VERSION      = "0.1.4"
   LIBYAML_PATH         = "libyaml-#{LIBYAML_VERSION}"
-  BUNDLER_VERSION      = "1.5.2"
+  BUNDLER_VERSION      = "1.9.7"
   BUNDLER_GEM_PATH     = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION         = "0.4.7"
   NODE_JS_BINARY_PATH  = "node-#{NODE_VERSION}"
@@ -22,6 +22,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   LEGACY_JVM_VERSION   = "openjdk1.7.0_25"
   DEFAULT_RUBY_VERSION = "ruby-2.0.0"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
+  STACK                = "cedar"
 
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -105,8 +106,8 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_profiled
       allow_git do
         install_gsl
-        run("cp -R vendor/gsl-1 /app/vendor/gsl")
-        run("cp -R vendor/gsl-1 /app/vendor/gsl-1")
+        run("mkdir ./app/vendor")
+        run("cp -R ./vendor/gsl-1 ./app/vendor/gsl-1")
         install_language_pack_gems
         build_bundler
         create_database_yml
@@ -124,7 +125,7 @@ private
   def default_path
     "bin:#{bundler_binstubs_path}:/usr/local/bin:/usr/bin:/bin:/app/vendor/gsl-1/bin"
   end
-  
+
   def ld_path
     "/app/vendor/gsl-1/lib"
   end
@@ -258,7 +259,7 @@ ERROR
         Dir.chdir(build_ruby_path) do
           ruby_vm = "ruby"
           instrument "ruby.fetch_build_ruby" do
-            @fetchers[:buildpack].fetch_untar("#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
+            @fetchers[:buildpack].fetch_untar("#{STACK}/#{ruby_version.version.sub(ruby_vm, "#{ruby_vm}-build")}.tgz")
           end
         end
         error invalid_ruby_version_message unless $?.success?
@@ -268,7 +269,7 @@ ERROR
       Dir.chdir(slug_vendor_ruby) do
         instrument "ruby.fetch_ruby" do
           if ruby_version.rbx?
-            file     = "#{ruby_version.version}.tar.bz2"
+            file     = "#{STACK}/#{ruby_version.version}.tar.bz2"
             sha_file = "#{file}.sha1"
             @fetchers[:rbx].fetch(file)
             @fetchers[:rbx].fetch(sha_file)
@@ -288,7 +289,7 @@ ERROR_MSG
             FileUtils.rm(file)
             FileUtils.rm(sha_file)
           else
-            @fetchers[:buildpack].fetch_untar("#{ruby_version.version}.tgz")
+            @fetchers[:buildpack].fetch_untar("#{STACK}/#{ruby_version.version}.tgz")
           end
         end
       end
@@ -694,7 +695,7 @@ params = CGI.parse(uri.query || "")
       end
     end
   end
-  
+
 	def bundler_cache
     "vendor/bundle"
   end
